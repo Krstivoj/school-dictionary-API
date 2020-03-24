@@ -1,19 +1,19 @@
 const Sequelize = require('sequelize');
 
-const ROLE_SCHEMA = {
+const CLASS_ELDER_SCHEMA = {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    name: {
-        type: Sequelize.STRING,
-        unique: true,
+    class_id: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    description: {
-        type: Sequelize.STRING
+    user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
     }
 };
 
-module.exports = ROLE_SCHEMA;
+module.exports = CLASS_ELDER_SCHEMA;

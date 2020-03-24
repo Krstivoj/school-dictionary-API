@@ -1,4 +1,3 @@
-const db = require('../../config');
 const UserService = require('../../services/user.service');
 
 exports.create = async (req, res, next) => {
@@ -7,8 +6,7 @@ exports.create = async (req, res, next) => {
     await res.json(created);
 };
 exports.findAll = async (req, res, next) => {
-        const { User } = db;
-        const users = await User.findAll();
+        const users = await UserService.findAll();
         await res.json(users);
 };
 

@@ -1,21 +1,12 @@
 const request = require('supertest');
 const expect = require('chai').expect;
-const jwt = require('jsonwebtoken');
 
 const db = require('../config');
-const config = require('../config/config');
 const app = require('../index');
+const {createToken, createUserPayload} = require('./utils/test.utils');
 
-const token = jwt.sign({username: 'testUsername'}, config.secret, { expiresIn: '24h'});
-const userPayload = (name, active, valid) => {
-    return {
-        name: `test${name}`,
-        username: valid ? `test${name}` : '',
-        password: `pass${name}`,
-        email: `test${name}@mail.com`,
-        active
-    }
-};
+const token = createToken('usernameT', true);
+
 describe('/api/user', () => {
     beforeEach(async () => {
         const {User} = db;
@@ -24,8 +15,8 @@ describe('/api/user', () => {
     describe('GET /', () => {
        it('Should return all users. Expected status is 200', async () => {
            const users = [
-               userPayload('GET1', true, true),
-               userPayload('GET2', true, true)
+               createUserPayload('GET1', true, true),
+               createUserPayload('GET2', true, true)
            ];
            const {User} = db;
            await User.bulkCreate(users);
@@ -34,19 +25,13 @@ describe('/api/user', () => {
            expect(res.body.length).to.equal(2);
        });
         it('Should return unauthorized access. Expected status is 401', async () => {
-            const users = [
-                userPayload('GETTokenInvalid1', true, true),
-                userPayload('GETTokenInvalid2', true, true)
-            ];
-            const {User} = db;
-            await User.bulkCreate(users);
             const res = await request(app).get('/api/user');
             expect(res.status).to.equal(401);
         });
     });
     describe('GET /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
-            const user = userPayload('GETId1', true, true);
+            const user = createUserPayload('GETId1', true, true);
             const {User} = db;
             const createdUser = await User.create(user,{returning: true});
             const res = await request(app)
@@ -64,7 +49,7 @@ describe('/api/user', () => {
     });
     describe('DELETE /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
-            const user = userPayload('DELETEId1', true, true);
+            const user = createUserPayload('DELETEId1', true, true);
             const {User} = db;
             const createdUser = await User.create(user,{returning: true});
             const res = await request(app)
@@ -81,7 +66,7 @@ describe('/api/user', () => {
     });
     describe('POST /', () => {
        it('Should create and return user if all valid. Expected status is 200', async () => {
-           const user = userPayload('POST', true, true);
+           const user = createUserPayload('POST', true, true);
            const res = await request(app).post('/api/user').set('Authorization',`Bearer ${token}`).send(user);
 
            expect(res.status).to.equal(200);
@@ -93,20 +78,20 @@ describe('/api/user', () => {
        });
 
        it('Should return unauthorized access (missing token). Expected status is 401.', async () => {
-           const user = userPayload('POSTJWTInvalid', true, true);
+           const user = createUserPayload('POSTJWTInvalid', true, true);
            const res = await request(app).post('/api/user').send(user);
            expect(res.status).to.equal(401);
        });
 
         it('Should return bad request. Expected status is 400', async () => {
-            const user = userPayload('POSTBadReq', true, false);
+            const user = createUserPayload('POSTBadReq', true, false);
             const res = await request(app).post('/api/user').set('Authorization',`Bearer ${token}`).send(user);
             expect(res.status).to.equal(400);
         });
    });
     describe('PUT /:id', () => {
        it('Should update the existing user. Expected status is 200', async () => {
-           const user = userPayload('PUT', true, true);
+           const user = createUserPayload('PUT', true, true);
            const {User} = db;
            const newUser = await User.create(user, {returning: true});
            const res = await request(app)
@@ -122,7 +107,7 @@ describe('/api/user', () => {
            expect(res.body).to.have.property('active', false);
        });
        it('Should throw error if user not found. Expected status is 404', async () => {
-           const user = userPayload('PUTFail', true, true);
+           const user = createUserPayload('PUTFail', true, true);
            const {User} = db;
            const newUser = await User.create(user, {returning: true});
            const res = await request(app)
@@ -135,7 +120,7 @@ describe('/api/user', () => {
            expect(res.status).to.equal(404);
        });
        it('Should return unauthorized access (invalid token). Expected status is 401.', async () => {
-           const user = userPayload('PUTJWTInvalid', true, true);
+           const user = createUserPayload('PUTJWTInvalid', true, true);
            const {User} = db;
            const newUser = await User.create(user, {returning: true});
            const res = await request(app)

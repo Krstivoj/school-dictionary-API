@@ -27,5 +27,4 @@ const initModels = () => {
 
 const db = initModels();
 db['sequelize'] = sequelize;
-
 module.exports = db;

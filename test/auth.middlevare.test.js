@@ -1,13 +1,12 @@
 const request = require('supertest');
-const jwt = require('jsonwebtoken');
 const expect = require('chai').expect;
 
 const app = require('../index');
 const authMiddleware = require('../middlewares/auth.middleware');
-const config = require('../config/config');
+const {createToken} = require('./utils/test.utils');
 
-const validToken = jwt.sign({username: 'testUsername'}, config.secret, { expiresIn: '24h'});
-const invalidToken = jwt.sign({username: 'testUsername'}, config.secret, { expiresIn: '1ms'});
+const validToken = createToken('testUser', true);
+const invalidToken = createToken('testUser', false);
 
 describe('auth.middleware', () => {
    it('If all correct should call next middleware', async () => {

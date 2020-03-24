@@ -1,6 +1,10 @@
 const errorMiddleware = (err, req, res, next) => {
-    const {status, message} = err ;
-    res.status(status || 500);
+    let {status, message, name} = err ;
+    let statusCode = status ;
+    if (name === 'SequelizeUniqueConstraintError') {
+        statusCode = 409;
+    }
+    res.status(statusCode || 500);
     res.json({message: message || 'Something has gone wrong!'});
 };
 
