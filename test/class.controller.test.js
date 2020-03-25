@@ -24,11 +24,6 @@ describe('/api/class', () => {
            expect(res.status).to.equal(200);
            expect(res.body.length).to.equal(classes.length);
        });
-       it('Should return unauthorised access. Expected status is 401', async () => {
-           const res = await request(app)
-               .get('/api/class');
-           expect(res.status).to.equal(401);
-        });
     });
     describe('POST /', () => {
         it('Should create new class and return created object. Expected status is 200', async () => {
@@ -42,13 +37,6 @@ describe('/api/class', () => {
             expect(res.body).to.have.property('id');
             expect(res.body).to.have.property('key', classObject.key);
             expect(res.body).to.have.property('description', classObject.description);
-        });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const classObject = createClassPayload('FIRST CLASS post 401 ', 'First class (1)');
-            const res = await request(app)
-                .post('/api/class')
-                .send(classObject);
-            expect(res.status).to.equal(401);
         });
         it('Should return conflict. Expected status is 409', async () => {
             const classObject = createClassPayload('FIRST CLASS post 409 ', 'First class (1)');
@@ -81,18 +69,6 @@ describe('/api/class', () => {
             expect(res.body).to.have.property('id', newClass.id);
             expect(res.body).to.have.property('key', updated.key);
             expect(res.body).to.have.property('description', updated.description);
-        });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const classObject = createClassPayload('Class put 401', 'First class (401)');
-            const {Class} = db;
-            const newClass = await Class.create(classObject, {returning: true});
-            const updated = {
-                key: 'putTest'
-            };
-            const res = await request(app)
-                .put(`/api/class/${newClass.id}`)
-                .send({...updated});
-            expect(res.status).to.equal(401);
         });
         it('Should return resource not found. Expected status is 404', async () => {
             const updated = {
@@ -136,14 +112,6 @@ describe('/api/class', () => {
             expect(res.body).to.have.property('key');
             expect(res.body).to.have.property('description');
         });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const classPayload = createClassPayload('get by id 401', '---');
-            const {Class} = db;
-            const newClass = await Class.create(classPayload);
-            const res = await request(app)
-                .get(`/api/class/${newClass.id}`);
-            expect(res.status).to.equal(401);
-        });
         it('Should return resource not found. Expected status is 404', async () => {
             const token = createToken('username12', true);
             const res = await request(app)
@@ -162,14 +130,6 @@ describe('/api/class', () => {
                 .delete(`/api/class/${newClass.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
-        });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const classPayload = createClassPayload('delete by id 401', '---');
-            const {Class} = db;
-            const newClass = await Class.create(classPayload);
-            const res = await request(app)
-                .delete(`/api/class/${newClass.id}`)
-            expect(res.status).to.equal(401);
         });
         it('Should return resource not found. Expected status is 404', async () => {
             const token = createToken('username12', true);

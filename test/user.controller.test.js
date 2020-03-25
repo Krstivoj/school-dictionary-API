@@ -24,10 +24,6 @@ describe('/api/user', () => {
            expect(res.status).to.equal(200);
            expect(res.body.length).to.equal(2);
        });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const res = await request(app).get('/api/user');
-            expect(res.status).to.equal(401);
-        });
     });
     describe('GET /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
@@ -76,18 +72,11 @@ describe('/api/user', () => {
            expect(res.body).to.have.property('email', user.email);
            expect(res.body).to.have.property('active', user.active);
        });
-
-       it('Should return unauthorized access (missing token). Expected status is 401.', async () => {
-           const user = createUserPayload('POSTJWTInvalid', true, true);
-           const res = await request(app).post('/api/user').send(user);
-           expect(res.status).to.equal(401);
+       it('Should return bad request. Expected status is 400', async () => {
+           const user = createUserPayload('POSTBadReq', true, false);
+           const res = await request(app).post('/api/user').set('Authorization',`Bearer ${token}`).send(user);
+           expect(res.status).to.equal(400);
        });
-
-        it('Should return bad request. Expected status is 400', async () => {
-            const user = createUserPayload('POSTBadReq', true, false);
-            const res = await request(app).post('/api/user').set('Authorization',`Bearer ${token}`).send(user);
-            expect(res.status).to.equal(400);
-        });
    });
     describe('PUT /:id', () => {
        it('Should update the existing user. Expected status is 200', async () => {
@@ -118,18 +107,6 @@ describe('/api/user', () => {
                    active: false
                });
            expect(res.status).to.equal(404);
-       });
-       it('Should return unauthorized access (invalid token). Expected status is 401.', async () => {
-           const user = createUserPayload('PUTJWTInvalid', true, true);
-           const {User} = db;
-           const newUser = await User.create(user, {returning: true});
-           const res = await request(app)
-               .put(`/api/user/${newUser.id}`)
-               .send({
-                   name: 'newTest',
-                   active: false
-               });
-           expect(res.status).to.equal(401);
        });
    });
 });

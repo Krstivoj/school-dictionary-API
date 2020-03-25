@@ -25,11 +25,6 @@ describe('api/role', () => {
             expect(res.status).to.equal(200);
             expect(res.body.length).to.equal(2);
         });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const res = await request(app)
-                .get('/api/role');
-            expect(res.status).to.equal(401);
-        });
     });
     describe('POST /', () => {
         it('Should create and return role object. Expected status is 200', async () => {
@@ -42,13 +37,6 @@ describe('api/role', () => {
             expect(res.body).to.have.property('id');
             expect(res.body).to.have.property('name',role.name);
             expect(res.body).to.have.property('description', role.description);
-        });
-        it('Should return unauthorized access. Expected status is 401', async () => {
-            const role = createRolePayload('rolePOST', 'Creating role');
-            const res = await request(app)
-                .post('/api/role')
-                .send(role);
-            expect(res.status).to.equal(401);
         });
         it('Should return conflict. Expected status 409', async () => {
             const roles = [
@@ -77,17 +65,6 @@ describe('api/role', () => {
            expect(res.status).to.equal(200);
            expect(res.body).to.have.property('id', newRole.id);
            expect(res.body).to.have.property('description', 'test updating');
-       });
-       it('Should return unauthorized access. Expected status is 401', async () => {
-           const role = createRolePayload('roleUpdate401', 'update role 401');
-           const {Role} = db;
-           const newRole = await Role.create(role, {returning: true});
-           const res = await request(app)
-               .put(`/api/role/${newRole.id}`)
-               .send({
-                   description: 'test updating'
-               });
-           expect(res.status).to.equal(401);
        });
        it('Should return not found resource. Expected status is 404', async () => {
             const res = await request(app)
@@ -127,14 +104,6 @@ describe('api/role', () => {
             expect(res.body).to.have.property('name');
             expect(res.body).to.have.property('description');
         });
-        it('Should return unauthorised access. Expected code is 401', async () => {
-            const role = createRolePayload('roleGETbyID2', 'description');
-            const {Role} = db;
-            const newRole = await Role.create(role, {returning: true});
-            const res = await request(app)
-                .get(`/api/role/${newRole.id}`);
-            expect(res.status).to.equal(401);
-        });
         it('Should return resource not found. Expected status is 404', async () => {
             const res = await request(app)
                 .get(`/api/role/0`)
@@ -151,14 +120,6 @@ describe('api/role', () => {
                 .delete(`/api/role/${newRole.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
-        });
-        it('Should return unauthorised access. Expected status is 401', async () => {
-            const role = createRolePayload('roleDelete1', 'description');
-            const {Role} = db;
-            const newRole = await Role.create(role, {returning: true});
-            const res = await request(app)
-                .delete(`/api/role/${newRole.id}`);
-            expect(res.status).to.equal(401);
         });
         it('Should return resource not found. Expected status is 404', async () => {
             const res = await request(app)
