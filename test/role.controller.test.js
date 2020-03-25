@@ -91,7 +91,7 @@ describe('api/role', () => {
        });
        it('Should return not found resource. Expected status is 404', async () => {
             const res = await request(app)
-                .put(`/api/role/`)
+                .put(`/api/role/0`)
                 .set('Authorization', `Bearer ${token}`)
                 .send({
                     description: 'test updating'

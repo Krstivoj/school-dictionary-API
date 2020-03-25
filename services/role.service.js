@@ -12,8 +12,15 @@ const create = async (role) => {
 
 const update = async (id, role) => {
     const {Role} = db;
-    await Role.update(role, {where: {id}});
-    return Role.findOne({where: {id}});
+    const rows = await Role.update(role, {where: {id}});
+    if (!rows[0]) {
+        throw {
+            status: 404,
+            message: 'Role not found'
+        }
+    } else {
+        return Role.findOne({where: {id}});
+    }
 };
 
 const findById = async (id) => {

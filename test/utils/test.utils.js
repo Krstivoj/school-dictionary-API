@@ -24,7 +24,14 @@ const createUserPayload = (name, active, valid) => {
 
 const createRolePayload = (name, description) => {
     return {
-        name: `test${name}`,
+        name: `role${name}`,
+        description
+    };
+};
+
+const createClassPayload = (key, description) => {
+    return {
+        key: `class${key}`,
         description
     };
 };
@@ -32,5 +39,6 @@ const createRolePayload = (name, description) => {
 module.exports = {
     createToken,
     createUserPayload,
-    createRolePayload
+    createRolePayload,
+    createClassPayload
 };

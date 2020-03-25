@@ -27,4 +27,7 @@ const initModels = () => {
 
 const db = initModels();
 db['sequelize'] = sequelize;
+// db.sequelize.sync({
+//     force: true
+// });
 module.exports = db;

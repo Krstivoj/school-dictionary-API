@@ -6,6 +6,11 @@ const CLASS_SCHEMA = {
         autoIncrement: true,
         primaryKey: true
     },
+    key: {
+      type: Sequelize.STRING,
+      unique: true,
+      allowNull: false
+    },
     description: {
         type: Sequelize.STRING
     }
