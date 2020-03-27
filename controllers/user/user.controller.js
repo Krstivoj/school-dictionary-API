@@ -17,8 +17,8 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
     try {
         const {params} = req;
-        await UserService.findById(params.id);
-        await res.json();
+        const found = await UserService.findById(params.id);
+        await res.json(found);
     } catch (e) {
         next(e);
     }

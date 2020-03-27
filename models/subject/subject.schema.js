@@ -8,6 +8,9 @@ const SUBJECT_SCHEMA = {
     },
     key: {
         type: Sequelize.STRING
+    },
+    description: {
+        type: Sequelize.STRING
     }
 };
 

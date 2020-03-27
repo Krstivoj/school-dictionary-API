@@ -14,16 +14,11 @@ describe('api/role', () => {
     });
     describe('GET /', () => {
         it('Should return all roles. Expected status is 200', async () => {
-            const roles = [
-                createRolePayload('role1', 'description'),
-                createRolePayload('role2', 'description')];
-            const {Role} = db;
-            await Role.bulkCreate(roles);
             const res = await request(app)
                 .get('/api/role')
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
-            expect(res.body.length).to.equal(2);
+            expect(res.body).to.be.an('array');
         });
     });
     describe('POST /', () => {
@@ -98,6 +93,7 @@ describe('api/role', () => {
                 .get(`/api/role/${newRole.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
+            expect(res.body).to.be.a('object');
             expect(res.body).to.have.property('id', newRole.id);
             expect(res.body).to.have.property('name');
             expect(res.body).to.have.property('description');

@@ -5,6 +5,8 @@ const db = require('../config');
 const app = require('../index');
 const {createToken, createClassPayload} = require('./utils/test.utils');
 
+const token = createToken('className', true);
+
 describe('/api/class', () => {
     beforeEach( async () => {
         const {Class} = db;
@@ -12,23 +14,16 @@ describe('/api/class', () => {
     });
     describe('GET /', () => {
        it('Should return all classes. Expected status is 200', async () => {
-           const classes = [
-               createClassPayload('FIRST CLASS','First class(1)'),
-               createClassPayload('SECOND CLASS','Second class(2)')];
-           const {Class} = db;
-           await Class.bulkCreate(classes);
-           const token = createToken('className', true);
            const res = await request(app)
                .get('/api/class')
                .set('Authorization', `Bearer ${token}`);
            expect(res.status).to.equal(200);
-           expect(res.body.length).to.equal(classes.length);
+           expect(res.body).to.be.an('array');
        });
     });
     describe('POST /', () => {
         it('Should create new class and return created object. Expected status is 200', async () => {
             const classObject = createClassPayload('FIRST CLASS post', 'First class (1)');
-            const token = createToken('classPost', true);
             const res = await request(app)
                 .post('/api/class')
                 .set('Authorization', `Bearer ${token}`)
@@ -42,7 +37,6 @@ describe('/api/class', () => {
             const classObject = createClassPayload('FIRST CLASS post 409 ', 'First class (1)');
             const {Class} = db;
             await Class.create(classObject);
-            const token = createToken('classUsername', true);
             const res = await request(app)
                 .post('/api/class')
                 .set('Authorization', `Bearer ${token}`)
@@ -53,7 +47,6 @@ describe('/api/class', () => {
     describe('PUT /:id', () => {
         it('Should update and return updated class. Expected status is 200', async () => {
             const classObject = createClassPayload('FIRST CLASS put', 'First class (1)');
-            const token = createToken('classPut', true);
             const {Class} = db;
             const newClass = await Class.create(classObject, {returning: true});
             const updated = {
@@ -75,7 +68,6 @@ describe('/api/class', () => {
                 key: 'putTest',
                 description: 'some description'
             };
-            const token = createToken('classPut', true);
             const res = await request(app)
                 .put(`/api/class/0`)
                 .set('Authorization', `Bearer ${token}`)
@@ -90,7 +82,6 @@ describe('/api/class', () => {
             const {Class} = db;
             const class1 = await Class.create(classes[0]);
             await Class.create(classes[1]);
-            const token = createToken('className', true);
             const res = await request(app)
                 .put(`/api/class/${class1.id}`)
                 .set('Authorization', `Bearer ${token}`)
@@ -103,11 +94,11 @@ describe('/api/class', () => {
             const classPayload = createClassPayload('get by id', '---');
             const {Class} = db;
             const newClass = await Class.create(classPayload);
-            const token = createToken('username12', true);
             const res = await request(app)
                 .get(`/api/class/${newClass.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
+            expect(res.body).to.be.a('object');
             expect(res.body).to.have.property('id', newClass.id);
             expect(res.body).to.have.property('key');
             expect(res.body).to.have.property('description');
@@ -125,14 +116,12 @@ describe('/api/class', () => {
             const classPayload = createClassPayload('delete by id', '---');
             const {Class} = db;
             const newClass = await Class.create(classPayload);
-            const token = createToken('username12', true);
             const res = await request(app)
                 .delete(`/api/class/${newClass.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
         });
         it('Should return resource not found. Expected status is 404', async () => {
-            const token = createToken('username12', true);
             const res = await request(app)
                 .delete(`/api/class/0`)
                 .set('Authorization', `Bearer ${token}`);
