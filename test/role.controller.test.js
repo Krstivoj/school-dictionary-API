@@ -39,15 +39,13 @@ describe('api/role', () => {
             expect(res.body).to.have.property('description', role.description);
         });
         it('Should return conflict. Expected status 409', async () => {
-            const roles = [
-                createRolePayload('rolePOST409', 'description'),
-                createRolePayload('rolePOST409', 'description1')];
+            const role = createRolePayload('rolePOST409', 'description');
             const {Role} = db;
-            await Role.create(roles[0]);
+            await Role.create(role);
             const res = await request(app)
                 .post('/api/role')
                 .set('Authorization', `Bearer ${token}`)
-                .send(roles[1]);
+                .send(role);
             expect(res.status).to.equal(409);
         });
     });

@@ -1,9 +1,13 @@
 const UserService = require('../../services/user.service');
 
 exports.create = async (req, res, next) => {
-    const {body} = req;
-    const created = await UserService.create(body);
-    await res.json(created);
+    try {
+        const {body} = req;
+        const created = await UserService.create(body);
+        await res.json(created);
+    } catch (e) {
+        next(e);
+    }
 };
 exports.findAll = async (req, res, next) => {
         const users = await UserService.findAll();

@@ -9,7 +9,7 @@ const validateCreation = (route, body) => {
         if (err) {
             validation = {
               success: false,
-              message: 'Body is not complete!'
+              message: 'Request body is not complete!'
             };
         } else {
             validation = {

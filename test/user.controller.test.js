@@ -34,7 +34,6 @@ describe('/api/user', () => {
                 .get(`/api/user/${createdUser.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
-            // expect(res.body.length).to.equal(1);
         });
         it('Should throw Not found exception. Expected status is 404', async () => {
             const res = await request(app)
@@ -76,6 +75,19 @@ describe('/api/user', () => {
            const user = createUserPayload('POSTBadReq', true, false);
            const res = await request(app).post('/api/user').set('Authorization',`Bearer ${token}`).send(user);
            expect(res.status).to.equal(400);
+       });
+       it('Should return conflict. Expected status is 409', async () => {
+           const user = createUserPayload('testPOST409', true, true);
+           const {User} = db;
+           await User.create(user);
+           const token = createToken('testPOST409', true);
+           const res = await request(app)
+               .post('/api/user')
+               .set('Authorization', `Bearer ${token}`)
+               .send(user);
+           expect(res.status).to.equal(409);
+
+
        });
    });
     describe('PUT /:id', () => {
