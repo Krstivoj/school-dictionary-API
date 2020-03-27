@@ -120,6 +120,20 @@ describe('/api/user', () => {
                });
            expect(res.status).to.equal(404);
        });
+       it('Should return conflict. Expected status is 409', async () => {
+           const users = [
+               createUserPayload('testPUT4091', true, true),
+               createUserPayload('testPUTT4092', true, true)];
+           const {User} = db;
+           const user1 = await User.create(users[0]);
+           await User.create(users[1]);
+           const token = createToken('testPUT409', true);
+           const res = await request(app)
+               .put(`/api/user/${user1.id}`)
+               .set('Authorization', `Bearer ${token}`)
+               .send({username: users[1].username});
+           expect(res.status).to.equal(409);
+        });
    });
 });
 
