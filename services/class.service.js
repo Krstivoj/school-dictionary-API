@@ -12,15 +12,15 @@ const create = async (classObject) => {
 
 const update = async (id, update) => {
     const {Class} = db;
-    const rowsNumber = await Class.update(update, {where: {id}});
-    if (!rowsNumber[0]) {
+    await Class.update(update, {where: {id}});
+    const updated = await Class.findOne({where: {id}});
+    if (!updated) {
         throw {
             status: 404,
             message: 'Class not found'
         }
-    } else {
-        return Class.findOne({where: {id}});
     }
+    return updated;
 };
 
 const findById = async (id) => {
@@ -38,14 +38,12 @@ const findById = async (id) => {
 
 const destroy = async (id) => {
     const {Class} = db;
-    const deletedRows = await Class.destroy({where: {id}});
-    if (!deletedRows) {
+    const deleted = await Class.destroy({where: {id}});
+    if (!deleted) {
         throw {
             status: 404,
             message: 'Class not found'
         }
-    } else {
-        return deletedRows;
     }
 };
 

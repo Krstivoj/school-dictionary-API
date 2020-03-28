@@ -10,7 +10,7 @@ const createToken = (username, valid) => {
         {
             expiresIn: valid ? '24h': '1ms'
         });
-}
+};
 
 const createUserPayload = (name, active, valid) => {
     return {
@@ -22,16 +22,23 @@ const createUserPayload = (name, active, valid) => {
     }
 };
 
-const createRolePayload = (name, description) => {
+const createRolePayload = (name, description, valid) => {
     return {
-        name: `role${name}`,
+        name: valid ? `role${name}` : null,
         description
     };
 };
 
-const createClassPayload = (key, description) => {
+const createClassPayload = (key, description, valid) => {
     return {
-        key: `class${key}`,
+        key: valid ? `class${key}` : null,
+        description
+    };
+};
+
+const createSubjectPayload = (key, description, valid) => {
+    return {
+        key: valid ? `subject${key}` : null,
         description
     };
 };
@@ -40,5 +47,6 @@ module.exports = {
     createToken,
     createUserPayload,
     createRolePayload,
-    createClassPayload
+    createClassPayload,
+    createSubjectPayload
 };

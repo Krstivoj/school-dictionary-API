@@ -78,7 +78,10 @@ describe('/api/user', () => {
        });
        it('Should return bad request. Expected status is 400', async () => {
            const user = createUserPayload('POSTBadReq', true, false);
-           const res = await request(app).post('/api/user').set('Authorization',`Bearer ${token}`).send(user);
+           const res = await request(app)
+               .post('/api/user')
+               .set('Authorization',`Bearer ${token}`)
+               .send(user);
            expect(res.status).to.equal(400);
        });
        it('Should return conflict. Expected status is 409', async () => {
@@ -112,11 +115,8 @@ describe('/api/user', () => {
            expect(res.body).to.have.property('active', false);
        });
        it('Should throw error if user not found. Expected status is 404', async () => {
-           const user = createUserPayload('PUTFail', true, true);
-           const {User} = db;
-           const newUser = await User.create(user, {returning: true});
            const res = await request(app)
-               .put(`/api/user/${(2*newUser.id)}`)
+               .put(`/api/user/0`)
                .set('Authorization',`Bearer ${token}`)
                .send({
                    name: 'newTest',
@@ -129,7 +129,7 @@ describe('/api/user', () => {
                createUserPayload('testPUT4091', true, true),
                createUserPayload('testPUTT4092', true, true)];
            const {User} = db;
-           const user1 = await User.create(users[0]);
+           const user1 = await User.create(users[0], {returning: true});
            await User.create(users[1]);
            const res = await request(app)
                .put(`/api/user/${user1.id}`)

@@ -7,10 +7,16 @@ const SUBJECT_SCHEMA = {
         primaryKey: true
     },
     key: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
     },
     description: {
         type: Sequelize.STRING
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 };
 

@@ -23,7 +23,7 @@ describe('/api/class', () => {
     });
     describe('POST /', () => {
         it('Should create new class and return created object. Expected status is 200', async () => {
-            const classObject = createClassPayload('FIRST CLASS post', 'First class (1)');
+            const classObject = createClassPayload('FIRST CLASS post', 'First class (1)', true);
             const res = await request(app)
                 .post('/api/class')
                 .set('Authorization', `Bearer ${token}`)
@@ -34,7 +34,7 @@ describe('/api/class', () => {
             expect(res.body).to.have.property('description', classObject.description);
         });
         it('Should return conflict. Expected status is 409', async () => {
-            const classObject = createClassPayload('FIRST CLASS post 409 ', 'First class (1)');
+            const classObject = createClassPayload('FIRST CLASS post 409 ', 'First class (1)', true);
             const {Class} = db;
             await Class.create(classObject);
             const res = await request(app)
@@ -46,7 +46,7 @@ describe('/api/class', () => {
     });
     describe('PUT /:id', () => {
         it('Should update and return updated class. Expected status is 200', async () => {
-            const classObject = createClassPayload('FIRST CLASS put', 'First class (1)');
+            const classObject = createClassPayload('FIRST CLASS put', 'First class (1)', true);
             const {Class} = db;
             const newClass = await Class.create(classObject, {returning: true});
             const updated = {
@@ -77,10 +77,10 @@ describe('/api/class', () => {
         });
         it('Should return conflict. Expected status is 409', async () => {
             const classes = [
-                createClassPayload('FIRST CLASS 409','First class(1)'),
-                createClassPayload('SECOND CLASS 409','Second class(2)')];
+                createClassPayload('FIRST CLASS 409','First class(1)', true),
+                createClassPayload('SECOND CLASS 409','Second class(2)', true)];
             const {Class} = db;
-            const class1 = await Class.create(classes[0]);
+            const class1 = await Class.create(classes[0], {returning: true});
             await Class.create(classes[1]);
             const res = await request(app)
                 .put(`/api/class/${class1.id}`)
@@ -91,9 +91,9 @@ describe('/api/class', () => {
     });
     describe('GET /:id', () => {
         it('Should return one class. Expected status is 200', async () => {
-            const classPayload = createClassPayload('get by id', '---');
+            const classPayload = createClassPayload('get by id', '---', true);
             const {Class} = db;
-            const newClass = await Class.create(classPayload);
+            const newClass = await Class.create(classPayload, {returning: true});
             const res = await request(app)
                 .get(`/api/class/${newClass.id}`)
                 .set('Authorization', `Bearer ${token}`);
@@ -113,9 +113,9 @@ describe('/api/class', () => {
     });
     describe('DELETE /:id', () => {
         it('Should delete resource. Expected resource is 200', async () => {
-            const classPayload = createClassPayload('delete by id', '---');
+            const classPayload = createClassPayload('delete by id', '---', true);
             const {Class} = db;
-            const newClass = await Class.create(classPayload);
+            const newClass = await Class.create(classPayload, {returning: true});
             const res = await request(app)
                 .delete(`/api/class/${newClass.id}`)
                 .set('Authorization', `Bearer ${token}`);

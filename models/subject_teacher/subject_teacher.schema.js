@@ -13,6 +13,10 @@ const SUBJECT_TEACHER_SCHEMA = {
     user_id: {
         type: Sequelize.INTEGER,
         allowNull: false
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 };
 

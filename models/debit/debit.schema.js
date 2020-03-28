@@ -17,6 +17,10 @@ const DEBIT_SCHEMA = {
     subject_id: {
         type: Sequelize.INTEGER,
         allowNull: false
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 };
 

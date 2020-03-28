@@ -12,15 +12,15 @@ const create = async (role) => {
 
 const update = async (id, role) => {
     const {Role} = db;
-    const rows = await Role.update(role, {where: {id}});
-    if (!rows[0]) {
+    await Role.update(role, {where: {id}});
+    const updated = await Role.findOne({where: {id}});
+    if (!updated) {
         throw {
             status: 404,
             message: 'Role not found'
         }
-    } else {
-        return Role.findOne({where: {id}});
     }
+    return updated;
 };
 
 const findById = async (id) => {
@@ -38,14 +38,13 @@ const findById = async (id) => {
 
 const destroy = async (id) => {
     const {Role} = db;
-    const deletedRows = await Role.destroy({where: {id}});
-    if(!deletedRows){
+    await Role.update({deleted: true},{where: {id}});
+    const deleted = await Role.findOne({where: {id, deleted: true}});
+    if(!deleted){
         throw {
             status: 404,
             message: 'Role not found'
         }
-    } else {
-        return deletedRows;
     }
 };
 module.exports = {

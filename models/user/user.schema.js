@@ -30,7 +30,12 @@ const USER_SCHEMA = {
         }
     },
     active: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 };
 

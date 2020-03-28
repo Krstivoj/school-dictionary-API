@@ -13,6 +13,10 @@ const ROLE_SCHEMA = {
     },
     description: {
         type: Sequelize.STRING
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 };
 

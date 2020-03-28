@@ -23,7 +23,7 @@ describe('api/role', () => {
     });
     describe('POST /', () => {
         it('Should create and return role object. Expected status is 200', async () => {
-            const role = createRolePayload('rolePOST', 'Creating role');
+            const role = createRolePayload('rolePOST', 'Creating role', true);
             const res = await request(app)
                 .post('/api/role')
                 .set('Authorization', `Bearer ${token}`)
@@ -34,7 +34,7 @@ describe('api/role', () => {
             expect(res.body).to.have.property('description', role.description);
         });
         it('Should return conflict. Expected status 409', async () => {
-            const role = createRolePayload('rolePOST409', 'description');
+            const role = createRolePayload('rolePOST409', 'description', true);
             const {Role} = db;
             await Role.create(role);
             const res = await request(app)
@@ -46,7 +46,7 @@ describe('api/role', () => {
     });
     describe('PUT /:id', () => {
        it('Should update existing role. Expected status is 200', async () => {
-           const role = createRolePayload('roleForUpdate', 'update role');
+           const role = createRolePayload('roleForUpdate', 'update role', true);
            const {Role} = db;
            const newRole = await Role.create(role, {returning: true});
            const res = await request(app)
@@ -70,8 +70,8 @@ describe('api/role', () => {
         });
        it('Should return conflict. Expected status 409', async () => {
             const roles = [
-                createRolePayload('role409-1', 'description'),
-                createRolePayload('role409-2', 'description')];
+                createRolePayload('role409-1', 'description', true),
+                createRolePayload('role409-2', 'description', true)];
             const {Role} = db;
             const role1 = await Role.create(roles[0], {returning: true});
             await Role.create(roles[1], {returning: true});
@@ -86,7 +86,7 @@ describe('api/role', () => {
     });
     describe('GET /:id', () => {
         it('Should return one object. Expected status is 200', async () => {
-            const role = createRolePayload('roleGETbyID', 'description');
+            const role = createRolePayload('roleGETbyID', 'description', true);
             const {Role} = db;
             const newRole = await Role.create(role, {returning: true});
             const res = await request(app)
@@ -107,7 +107,7 @@ describe('api/role', () => {
     });
     describe('DELETE /:id', () => {
         it('Should return status 200.', async () => {
-            const role = createRolePayload('roleDelete', 'description');
+            const role = createRolePayload('roleDelete', 'description', true);
             const {Role} = db;
             const newRole = await Role.create(role, {returning: true});
             const res = await request(app)

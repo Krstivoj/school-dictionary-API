@@ -13,6 +13,10 @@ const CLASS_ELDER_SCHEMA = {
     user_id: {
         type: Sequelize.INTEGER,
         allowNull: false
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 };
 

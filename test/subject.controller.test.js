@@ -5,7 +5,7 @@ const db = require('../config');
 const app = require('../index');
 
 
-const {createToken} = require('./utils/test.utils');
+const {createToken, createSubjectPayload} = require('./utils/test.utils');
 
 const token = createToken('usernameR', true);
 
@@ -21,6 +21,118 @@ describe('/api/subject', () => {
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
             expect(res.body).to.be.an('array');
+        });
+    });
+    describe('POST /', () => {
+        it('Should create and return subject. Expected status is 200.', async () => {
+            const subject = createSubjectPayload('POST', 'Some description', true);
+            const res = await request(app)
+                .post('/api/subject')
+                .set('Authorization',`Bearer ${token}`)
+                .send(subject);
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('id');
+            expect(res.body).to.have.property('key', subject.key);
+            expect(res.body).to.have.property('description', subject.description);
+        });
+        it('Should return bad request. Expected status is 400.', async () => {
+            const subject = createSubjectPayload('POST400', 'Some description', false);
+            const res = await request(app)
+                .post('/api/subject')
+                .set('Authorization',`Bearer ${token}`)
+                .send(subject);
+            expect(res.status).to.equal(400);
+        });
+        it('Should return conflict. Expected status 409.', async () => {
+            const subject = createSubjectPayload('POST409', 'Some description', true);
+            const {Subject} = db;
+            await Subject.create(subject);
+            const res = await request(app)
+                .post('/api/subject')
+                .set('Authorization',`Bearer ${token}`)
+                .send(subject);
+            expect(res.status).to.equal(409);
+        });
+    });
+    describe('PUT /:id', () => {
+        it('Should update and return updated subject. Expected status is 200.', async () => {
+            const subject = createSubjectPayload('PUT', 'Some description', true);
+            const {Subject} = db;
+            const newSubject = await Subject.create(subject, {returning: true});
+            const res = await request(app)
+                .put(`/api/subject/${newSubject.id}`)
+                .set('Authorization',`Bearer ${token}`)
+                .send({
+                    key: 'PUT_TEST'
+                });
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('id', newSubject.id);
+            expect(res.body).to.have.property('key', 'PUT_TEST');
+            expect(res.body).to.have.property('description', subject.description);
+        });
+        it('Should return resource not found. Expected status is 404.', async () => {
+            const res = await request(app)
+                .put(`/api/subject/0`)
+                .set('Authorization',`Bearer ${token}`)
+                .send({
+                    key: 'PUT_TEST'
+                });
+            expect(res.status).to.equal(404);
+        });
+        it('Should return conflict. Expected status is 409.', async () => {
+            const subjects = [
+                createSubjectPayload('PUT4091', 'Some description', true),
+                createSubjectPayload('PUT4092', 'Some description', true)];
+            const {Subject} = db;
+            const newSubject = await Subject.create(subjects[0], {returning: true});
+            await Subject.create(subjects[1]);
+            const res = await request(app)
+                .put(`/api/subject/${newSubject.id}`)
+                .set('Authorization',`Bearer ${token}`)
+                .send({
+                    key: subjects[1].key
+                });
+            expect(res.status).to.equal(409);
+        });
+    });
+    describe('GET /:id', () => {
+        it('Should return subject requested by id. Expected status is 200.', async () => {
+            const subject = createSubjectPayload('POST', 'Some description', true);
+            const {Subject} = db;
+            const newSubject = await Subject.create(subject, {returning: true});
+            const res = await request(app)
+                .get(`/api/subject/${newSubject.id}`)
+                .set('Authorization',`Bearer ${token}`);
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('id');
+            expect(res.body).to.have.property('key');
+            expect(res.body).to.have.property('description');
+        });
+        it('Should return resource not found. Expected result is 404.', async () => {
+            const res = await request(app)
+                .get(`/api/subject/0`)
+                .set('Authorization',`Bearer ${token}`);
+            expect(res.status).to.equal(404);
+        });
+    });
+    describe('DELETE /:id', () => {
+        it('Should delete resource. Expected status is 200.', async () => {
+            const subject = createSubjectPayload('POST', 'Some description', true);
+            const {Subject} = db;
+            const newSubject = await Subject.create(subject, {returning: true});
+            const res = await request(app)
+                .delete(`/api/subject/${newSubject.id}`)
+                .set('Authorization',`Bearer ${token}`);
+            expect(res.status).to.equal(200);
+        });
+        it('Should return resource not found. Expected status is 404.', async () => {
+            const res = await request(app)
+                .delete(`/api/subject/0`)
+                .set('Authorization',`Bearer ${token}`);
+            expect(res.status).to.equal(404);
         });
     });
 });

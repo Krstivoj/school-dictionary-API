@@ -13,6 +13,10 @@ const SUBJECT_CLASS = {
     class_id: {
         type: Sequelize.INTEGER,
         allowNull: false
+    },
+    active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
     }
 };
 
