@@ -8,11 +8,19 @@ const CLASS_ELDER_SCHEMA = {
     },
     class_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        // references: {
+        //     model: 'class',
+        //     key: 'id'
+        // }
     },
     user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        // references: {
+        //     model: 'user',
+        //     key: 'id'
+        // }
     },
     deleted: {
         type: Sequelize.BOOLEAN,

@@ -3,7 +3,8 @@ const ClassElderService = require('../../services/class_elder.service');
 exports.create = async (req, res, next) => {
     try {
         const {body} = req;
-        await res.json();
+        const classElder = await ClassElderService.create(body);
+        await res.json(classElder);
     } catch (e) {
         next(e);
     }

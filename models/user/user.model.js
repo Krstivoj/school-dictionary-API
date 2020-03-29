@@ -7,33 +7,33 @@ module.exports = (sequelize) => {
       user.belongsToMany(models.role,
           {
               as: 'users',
-              through: models.user_role_map,
+              through: 'user_role_map',
               foreignKey: 'user_id'
           });
       user.belongsToMany(models.class,
           {
-              as: 'elders',
-              through: models.class_elder,
-              foreignKey: 'user_id'
+              // as: 'elders',
+              through: 'class_elder',
+              // foreignKey: 'user_id'
           });
       user.belongsToMany(models.subject,
           {
-              through: models.debit,
+              through: 'debit',
               foreignKey: 'user_id'
             });
       user.belongsToMany(models.class,
           {
-              through: models.debit,
+              through: 'debit',
               foreignKey: 'user_id'
             });
       user.belongsToMany(models.class,
           {
-              through: models.student,
+              through: 'student',
               foreignKey: 'user_id'
           });
       user.belongsToMany(models.subject,
           {
-              through: models.subject_has_teacher,
+              through: 'subject_has_teacher',
               foreignKey: 'user_id'
           });
     };

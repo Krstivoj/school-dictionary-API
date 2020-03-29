@@ -43,10 +43,22 @@ const createSubjectPayload = (key, description, valid) => {
     };
 };
 
+const createClassElderPayload = (class_id, user_id, valid, parameter) => {
+    const classElderPayload = {
+        class_id,
+        user_id
+    };
+    if (!valid){
+        delete classElderPayload[parameter];
+    }
+    return classElderPayload;
+};
+
 module.exports = {
     createToken,
     createUserPayload,
     createRolePayload,
     createClassPayload,
-    createSubjectPayload
+    createSubjectPayload,
+    createClassElderPayload
 };
