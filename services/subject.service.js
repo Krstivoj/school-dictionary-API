@@ -1,23 +1,23 @@
-const db = require('../config/index');
+const {models} = require('../config/index');
 
 const findAll = async () => {
-    const {Subject} = db;
-    return Subject.findAll();
+    const {subject} = models;
+    return subject.findAll();
 };
 
-const create = async (subject) => {
-    const {Subject} = db;
-    return Subject.create(subject, {returning: true});
+const create = async (subjectPayload) => {
+    const {subject} = models;
+    return subject.create(subjectPayload, {returning: true});
 };
 
 const update = async (id, update) => {
-    const {Subject} = db;
-    await Subject.update(update, {where: {id}});
-    const found = await Subject.findOne({where: {id}});
+    const {subject} = models;
+    await subject.update(update, {where: {id}});
+    const found = await subject.findOne({where: {id}});
     if (!found) {
         throw {
             status: 404,
-            message: 'Subject not found'
+            message: 'subject not found'
         }
     }
     return found;
@@ -25,25 +25,25 @@ const update = async (id, update) => {
 };
 
 const findById = async (id) => {
-    const {Subject} = db;
-    const found = await Subject.findOne({where:{id}});
+    const {subject} = models;
+    const found = await subject.findOne({where:{id}});
     if(!found) {
         throw {
             status: 404,
-            message: 'Subject not found'
+            message: 'subject not found'
         };
     }
     return found;
 };
 
 const destroy = async (id) => {
-    const {Subject} = db;
-    await Subject.update({deleted: true}, {where:{id}});
-    const deleted = await Subject.findOne({where:{id, deleted: true}});
+    const {subject} = models;
+    await subject.update({deleted: true}, {where:{id}});
+    const deleted = await subject.findOne({where:{id, deleted: true}});
     if(!deleted) {
         throw {
             status: 404,
-            message: 'Subject not found'
+            message: 'subject not found'
         };
     }
 };

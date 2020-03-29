@@ -1,3 +1,4 @@
+const ClassElderService = require('../../services/class_elder.service');
 
 exports.create = async (req, res, next) => {
     try {
@@ -9,7 +10,8 @@ exports.create = async (req, res, next) => {
 };
 
 exports.findAll = async (req, res, next) => {
-    await res.json();
+    const classElders = await ClassElderService.findAll();
+    await res.json(classElders);
 };
 
 exports.update = async (req, res, next) => {

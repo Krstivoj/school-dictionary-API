@@ -1,18 +1,18 @@
-const db = require('../config/index');
+const {models} = require('../config/index');
 
 const findAll = async () => {
-    const {Class} = db ;
+    const Class = models.class;
     return Class.findAll();
 };
 
-const create = async (classObject) => {
-    const {Class} = db;
-    return Class.create(classObject, {returning: true});
+const create = async (classPayload) => {
+    const Class = models.class;
+    return Class.create(classPayload, {returning: true});
 };
 
-const update = async (id, update) => {
-    const {Class} = db;
-    await Class.update(update, {where: {id}});
+const update = async (id, classPayload) => {
+    const Class = models.class;
+    await Class.update(classPayload, {where: {id}});
     const updated = await Class.findOne({where: {id}});
     if (!updated) {
         throw {
@@ -24,7 +24,7 @@ const update = async (id, update) => {
 };
 
 const findById = async (id) => {
-    const {Class} = db;
+    const Class = models.class;
     const foundClass = await Class.findOne({where: {id}});
     if (!foundClass) {
         throw {
@@ -37,7 +37,7 @@ const findById = async (id) => {
 };
 
 const destroy = async (id) => {
-    const {Class} = db;
+    const Class = models.class;
     const deleted = await Class.destroy({where: {id}});
     if (!deleted) {
         throw {

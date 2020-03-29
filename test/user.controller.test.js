@@ -1,7 +1,7 @@
 const request = require('supertest');
 const expect = require('chai').expect;
 
-const db = require('../config');
+const {models} = require('../config');
 const app = require('../index');
 const {createToken, createUserPayload} = require('./utils/test.utils');
 
@@ -9,8 +9,8 @@ const token = createToken('usernameT', true);
 
 describe('/api/user', () => {
     beforeEach(async () => {
-        const {User} = db;
-        await User.destroy({where: {}});
+        const {user} = models;
+        await user.destroy({where: {}});
     });
     describe('GET /', () => {
        it('Should return all users. Expected status is 200', async () => {
@@ -23,19 +23,19 @@ describe('/api/user', () => {
     });
     describe('GET /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
-            const user = createUserPayload('GETId1', true, true);
-            const {User} = db;
-            const createdUser = await User.create(user,{returning: true});
+            const userPayload = createUserPayload('GETId1', true, true);
+            const {user} = models;
+            const createdUser = await user.create(userPayload,{returning: true});
             const res = await request(app)
                 .get(`/api/user/${createdUser.id}`)
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.property('id', createdUser.id);
-            expect(res.body).to.have.property('name',user.name);
-            expect(res.body).to.have.property('username', user.username);
-            expect(res.body).to.have.property('email', user.email);
-            expect(res.body).to.have.property('active', user.active);
+            expect(res.body).to.have.property('name',createdUser.name);
+            expect(res.body).to.have.property('username', createdUser.username);
+            expect(res.body).to.have.property('email', createdUser.email);
+            expect(res.body).to.have.property('active', createdUser.active);
         });
         it('Should throw Not found exception. Expected status is 404', async () => {
             const res = await request(app)
@@ -46,9 +46,9 @@ describe('/api/user', () => {
     });
     describe('DELETE /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
-            const user = createUserPayload('DELETEId1', true, true);
-            const {User} = db;
-            const createdUser = await User.create(user,{returning: true});
+            const userPayload = createUserPayload('DELETEId1', true, true);
+            const {user} = models;
+            const createdUser = await user.create(userPayload,{returning: true});
             const res = await request(app)
                 .delete(`/api/user/${createdUser.id}`)
                 .set('Authorization', `Bearer ${token}`);
@@ -63,35 +63,36 @@ describe('/api/user', () => {
     });
     describe('POST /', () => {
        it('Should create and return user if all valid. Expected status is 200', async () => {
-           const user = createUserPayload('POST', true, true);
+           const userPayload = createUserPayload('POST', true, true);
            const res = await request(app)
                .post('/api/user')
                .set('Authorization',`Bearer ${token}`)
-               .send(user);
+               .send(userPayload);
+
            expect(res.status).to.equal(200);
            expect(res.body).to.be.an('object');
            expect(res.body).to.have.property('id');
-           expect(res.body).to.have.property('name',user.name);
-           expect(res.body).to.have.property('username', user.username);
-           expect(res.body).to.have.property('email', user.email);
-           expect(res.body).to.have.property('active', user.active);
+           expect(res.body).to.have.property('name',userPayload.name);
+           expect(res.body).to.have.property('username', userPayload.username);
+           expect(res.body).to.have.property('email', userPayload.email);
+           expect(res.body).to.have.property('active', userPayload.active);
        });
        it('Should return bad request. Expected status is 400', async () => {
-           const user = createUserPayload('POSTBadReq', true, false);
+           const userPayload = createUserPayload('POSTBadReq', true, false);
            const res = await request(app)
                .post('/api/user')
                .set('Authorization',`Bearer ${token}`)
-               .send(user);
+               .send(userPayload);
            expect(res.status).to.equal(400);
        });
        it('Should return conflict. Expected status is 409', async () => {
-           const user = createUserPayload('testPOST409', true, true);
-           const {User} = db;
-           await User.create(user);
+           const userPayload = createUserPayload('testPOST409', true, true);
+           const {user} = models;
+           await user.create(userPayload);
            const res = await request(app)
                .post('/api/user')
                .set('Authorization', `Bearer ${token}`)
-               .send(user);
+               .send(userPayload);
            expect(res.status).to.equal(409);
 
 
@@ -99,9 +100,9 @@ describe('/api/user', () => {
    });
     describe('PUT /:id', () => {
        it('Should update the existing user. Expected status is 200', async () => {
-           const user = createUserPayload('PUT', true, true);
-           const {User} = db;
-           const newUser = await User.create(user, {returning: true});
+           const userPayload = createUserPayload('PUT', true, true);
+           const {user} = models;
+           const newUser = await user.create(userPayload, {returning: true});
            const res = await request(app)
                .put(`/api/user/${newUser.id}`)
                .set('Authorization',`Bearer ${token}`)
@@ -125,16 +126,16 @@ describe('/api/user', () => {
            expect(res.status).to.equal(404);
        });
        it('Should return conflict. Expected status is 409', async () => {
-           const users = [
+           const userPayloads = [
                createUserPayload('testPUT4091', true, true),
                createUserPayload('testPUTT4092', true, true)];
-           const {User} = db;
-           const user1 = await User.create(users[0], {returning: true});
-           await User.create(users[1]);
+           const {user} = models;
+           const user1 = await user.create(userPayloads[0], {returning: true});
+           await user.create(userPayloads[1]);
            const res = await request(app)
                .put(`/api/user/${user1.id}`)
                .set('Authorization', `Bearer ${token}`)
-               .send({username: users[1].username});
+               .send({username: userPayloads[1].username});
            expect(res.status).to.equal(409);
         });
    });

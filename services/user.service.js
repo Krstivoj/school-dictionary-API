@@ -1,50 +1,50 @@
-const db = require('../config/index');
+const {models} = require('../config/index');
 
 const findAll = async () => {
-    const {User} = db;
-    return User.findAll();
+    const {user} = models;
+    return user.findAll();
 };
 
 const create = async (payload) => {
-    const {User} = db;
-    return User.create(payload, {returning: true});
+    const {user} = models;
+    return user.create(payload, {returning: true});
 };
 
 const update = async (id, payload) => {
-    const {User} = db;
-    await User.update(payload, {where: {id}});
-  const user = await User.findOne({where: {id}});
-  if (!user){
+    const {user} = models;
+    await user.update(payload, {where: {id}});
+  const updated = await user.findOne({where: {id}});
+  if (!updated){
       throw {
           status: 404,
-          message: 'User not found'
+          message: 'user not found'
       };
   }
-  return user;
+  return updated;
 };
 
 const destroy = async (id) => {
-    const {User} = db;
-    await User.update({deleted: true}, {where: {id}});
-    const deleted = await User.findOne({where: {id, deleted: true}});
+    const {user} = models;
+    await user.update({deleted: true}, {where: {id}});
+    const deleted = await user.findOne({where: {id, deleted: true}});
     if (!deleted){
         throw {
             status: 404,
-            message: 'User not found'
+            message: 'user not found'
         };
     }
 };
 
 const findById = async (id) => {
-    const {User} = db;
-    const user = await User.findOne({where: {id}});
-    if (!user){
+    const {user} = models;
+    const found = await user.findOne({where: {id}});
+    if (!found){
         throw {
             status: 404,
-            message: 'User not found'
+            message: 'user not found'
         };
     }
-    return user;
+    return found;
 };
 
 module.exports = {

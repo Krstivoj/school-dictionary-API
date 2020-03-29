@@ -1,49 +1,49 @@
-const db = require('../config/index');
+const {models} = require('../config/index');
 
 const findAll = async () => {
-    const {Role} = db ;
-    return Role.findAll();
+    const {role} = models ;
+    return role.findAll();
 };
 
-const create = async (role) => {
-    const {Role} = db;
-    return Role.create(role);
+const create = async (rolePayload) => {
+    const {role} = models;
+    return role.create(rolePayload);
 };
 
-const update = async (id, role) => {
-    const {Role} = db;
-    await Role.update(role, {where: {id}});
-    const updated = await Role.findOne({where: {id}});
+const update = async (id, rolePayload) => {
+    const {role} = models;
+    await role.update(rolePayload, {where: {id}});
+    const updated = await role.findOne({where: {id}});
     if (!updated) {
         throw {
             status: 404,
-            message: 'Role not found'
+            message: 'role not found'
         }
     }
     return updated;
 };
 
 const findById = async (id) => {
-    const {Role} = db;
-    const role = await Role.findOne({where: {id}});
-    if(!role){
+    const {role} = models;
+    const found = await role.findOne({where: {id}});
+    if(!found){
         throw {
             status: 404,
-            message: 'Role not found'
+            message: 'role not found'
         }
     } else {
-        return role;
+        return found;
     }
 };
 
 const destroy = async (id) => {
-    const {Role} = db;
-    await Role.update({deleted: true},{where: {id}});
-    const deleted = await Role.findOne({where: {id, deleted: true}});
+    const {role} = models;
+    await role.update({deleted: true},{where: {id}});
+    const deleted = await role.findOne({where: {id, deleted: true}});
     if(!deleted){
         throw {
             status: 404,
-            message: 'Role not found'
+            message: 'role not found'
         }
     }
 };

@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 
 const app = require('../index');
 const config = require('../config/config');
-const db = require('../config');
+const {models} = require('../config');
 
 const userPayload = (name, active, valid) => {
     return {
@@ -19,8 +19,8 @@ const token = jwt.sign({username: 'testUsername'}, config.secret, { expiresIn: '
 
 describe('req.validation.middleware', () => {
     beforeEach(async () => {
-        const {User} = db;
-        await User.destroy({where: {}});
+        const {user} = models;
+        await user.destroy({where: {}});
     });
     describe('validation', () => {
         it('Should return bad request. Expected status is 400.', async () => {

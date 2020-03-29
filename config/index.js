@@ -14,20 +14,16 @@ const sequelize = new Sequelize('mydb', 'student', 'student123T#', {
 
 const initModels = () => {
     const constantPath = './models';
-    const models = {};
     fs.readdir(constantPath, function(err, modules) {
         modules
             .forEach(function (module) {
-                const modelName = module.charAt(0).toUpperCase() + module.slice(1);
-                models[modelName] = require(`.${constantPath}/${module}/${module}.model`)(sequelize);
+                require(`.${constantPath}/${module}/${module}.model`)(sequelize);
             });
     });
-    return models;
 };
 
-const db = initModels();
-db['sequelize'] = sequelize;
-// db.sequelize.sync({
+initModels();
+// sequelize.sync({
 //     force: true
 // });
-module.exports = db;
+module.exports = sequelize;
