@@ -1,6 +1,6 @@
 const express = require('express');
 const authMiddleware = require('./middlewares/auth.middleware');
-const router = require('./routes');
+const router = require('./router');
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
