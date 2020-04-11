@@ -9,18 +9,22 @@ const CLASS_ELDER_SCHEMA = {
     class_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        // references: {
-        //     model: 'class',
-        //     key: 'id'
-        // }
+        references: {
+            model: 'class',
+            key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
     },
     user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        // references: {
-        //     model: 'user',
-        //     key: 'id'
-        // }
+        references: {
+            model: 'user',
+            key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
     },
     deleted: {
         type: Sequelize.BOOLEAN,

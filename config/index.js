@@ -14,12 +14,17 @@ const sequelize = new Sequelize('mydb', 'student', 'student123T#', {
 
 const initModels = () => {
     const constantPath = './models';
-    fs.readdir(constantPath, function(err, modules) {
-        modules
-            .forEach(function (module) {
-                require(`.${constantPath}/${module}/${module}.model`)(sequelize);
-            });
+    const modules = fs.readdirSync(constantPath);
+    modules.forEach(function (module) {
+        require(`.${constantPath}/${module}/${module}.model`)(sequelize);
     });
+    const {models} = sequelize;
+    Object.keys(models).forEach((modelName) => {
+        if ('associate' in models[modelName]) {
+            models[modelName].associate(models);
+        }
+    });
+
 };
 
 initModels();

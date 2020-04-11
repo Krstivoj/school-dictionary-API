@@ -9,7 +9,7 @@ app.use('/api', authMiddleware, router);
 
 const port = 9000;
 app.listen(port, () => {
-    console.log(`Listening on port ${port}...`)
+    console.log(`Listening on port ${port}...`);
 });
 
 module.exports = app;

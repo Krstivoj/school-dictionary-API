@@ -3,7 +3,7 @@ const tableConfig = require('../../config/table.config');
 
 module.exports = (sequelize) => {
     const user = sequelize.define('user', userSchema, tableConfig('user'));
-    user.associate = (models) => {
+    user.associate = function(models) {
       user.belongsToMany(models.role,
           {
               as: 'users',
@@ -12,9 +12,9 @@ module.exports = (sequelize) => {
           });
       user.belongsToMany(models.class,
           {
-              // as: 'elders',
+              as: 'elders',
               through: 'class_elder',
-              // foreignKey: 'user_id'
+              foreignKey: 'user_id'
           });
       user.belongsToMany(models.subject,
           {

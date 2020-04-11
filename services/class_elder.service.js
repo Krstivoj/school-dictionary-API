@@ -2,7 +2,7 @@ const {models} = require('../config/index');
 
 const findAll = async () => {
     const {class_elder} = models ;
-    return class_elder.findAll();
+    return class_elder.findAll({include: [{model:models.user}, {model:models.class}]});
 };
 
 const create = async (classElderPayload) => {

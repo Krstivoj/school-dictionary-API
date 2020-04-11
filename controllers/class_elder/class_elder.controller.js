@@ -11,8 +11,12 @@ exports.create = async (req, res, next) => {
 };
 
 exports.findAll = async (req, res, next) => {
-    const classElders = await ClassElderService.findAll();
-    await res.json(classElders);
+    try {
+        const classElders = await ClassElderService.findAll();
+        await res.json(classElders);
+    } catch (e) {
+        console.log('Exception ',e);
+    }
 };
 
 exports.update = async (req, res, next) => {
