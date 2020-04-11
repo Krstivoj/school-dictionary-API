@@ -29,6 +29,10 @@ const CLASS_ELDER_SCHEMA = {
     deleted: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
+    },
+    school_year: {
+        type: Sequelize.DATE,
+        allowNull: false
     }
 };
 

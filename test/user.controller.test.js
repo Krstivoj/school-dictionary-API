@@ -37,7 +37,7 @@ describe('/api/user', () => {
             expect(res.body).to.have.property('email', createdUser.email);
             expect(res.body).to.have.property('active', createdUser.active);
         });
-        it('Should throw Not found exception. Expected status is 404', async () => {
+        it('Should return not found resource. Expected status is 404', async () => {
             const res = await request(app)
                 .get('/api/user/0')
                 .set('Authorization', `Bearer ${token}`);
@@ -54,7 +54,7 @@ describe('/api/user', () => {
                 .set('Authorization', `Bearer ${token}`);
             expect(res.status).to.equal(200);
         });
-        it('Should throw Not found exception. Expected status is 404', async () => {
+        it('Should return not found resource. Expected status is 404', async () => {
             const res = await request(app)
                 .delete('/api/user/0')
                 .set('Authorization', `Bearer ${token}`);
@@ -115,7 +115,7 @@ describe('/api/user', () => {
            expect(res.body).to.have.property('name', 'newTest');
            expect(res.body).to.have.property('active', false);
        });
-       it('Should throw error if user not found. Expected status is 404', async () => {
+       it('Should return resource not found. Expected status is 404', async () => {
            const res = await request(app)
                .put(`/api/user/0`)
                .set('Authorization',`Bearer ${token}`)

@@ -8,11 +8,19 @@ const GRADE_SCHEMA = {
     },
     subject_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'subject',
+            key: 'id'
+        }
     },
     student_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'student',
+            key: 'id'
+        }
     },
     date: {
         type: Sequelize.DATE,

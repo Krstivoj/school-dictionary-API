@@ -7,14 +7,12 @@ module.exports = (sequelize) => {
         grade.belongsTo(models.student,
             {
                 foreignKey: 'student_id',
-                targetKey: 'id',
-                as: 'student_subjects'
+                targetKey: 'id'
             });
         grade.belongsTo(models.subject,
             {
                 foreignKey: 'subject_id',
-                targetKey: 'id',
-                as: 'students_on_subject'
+                targetKey: 'id'
             });
     };
     return grade;

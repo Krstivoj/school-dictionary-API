@@ -2,7 +2,7 @@ const joi = require('joi');
 
 const validateCreation = (route, body) => {
     const parts = route.split('/');
-    const module = parts[2];
+    const module = parts[2].replace(/-/, "_");
     const { creationSchema } = require(`../models/${module}/${module}.validation.schema`);
     let validation = null;
     joi.validate(body, creationSchema, (err, value) => {

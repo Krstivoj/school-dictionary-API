@@ -46,12 +46,22 @@ const createSubjectPayload = (key, description, valid) => {
 const createClassElderPayload = (class_id, user_id, valid, parameter) => {
     const classElderPayload = {
         class_id,
-        user_id
+        user_id,
+        school_year: new Date()
     };
     if (!valid){
         delete classElderPayload[parameter];
     }
     return classElderPayload;
+};
+
+const createGradePayload = (student_id, subject_id, date, value, valid) => {
+   return {
+       student_id,
+       subject_id,
+       date,
+       value
+   }
 };
 
 module.exports = {
@@ -60,5 +70,6 @@ module.exports = {
     createRolePayload,
     createClassPayload,
     createSubjectPayload,
-    createClassElderPayload
+    createClassElderPayload,
+    createGradePayload
 };

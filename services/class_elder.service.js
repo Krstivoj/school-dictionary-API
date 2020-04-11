@@ -39,7 +39,7 @@ const findById = async (id) => {
 const destroy = async (id) => {
     const {class_elder} = models;
     await class_elder.update({deleted: true},{where: {id}});
-    const deleted = await class_elder.findOne({where: {id, deleted: true}});
+    const deleted = await class_elder.findOne({where: {id, deleted: true}, attributes:['id']});
     if(!deleted){
         throw {
             status: 404,

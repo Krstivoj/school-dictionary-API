@@ -31,7 +31,8 @@ exports.update = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
     try {
         const {params} = req;
-        await res.json();
+        const classElder = await ClassElderService.findById(params.id);
+        await res.json(classElder);
     } catch (e) {
         next(e);
     }
@@ -40,6 +41,7 @@ exports.findOne = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
     try {
         const {params} = req;
+        await ClassElderService.destroy(params.id);
         await res.json();
     } catch (e) {
         next(e);
