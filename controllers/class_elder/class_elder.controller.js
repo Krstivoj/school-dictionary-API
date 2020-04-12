@@ -22,7 +22,8 @@ exports.findAll = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     try {
         const {params, body} = req;
-        await res.json();
+        const updated = await ClassElderService.update(params.id, body);
+        await res.json(updated);
     } catch (e) {
         next(e);
     }
