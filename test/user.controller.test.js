@@ -6,6 +6,7 @@ const app = require('../index');
 const {createToken, createUserPayload} = require('./utils/test.utils');
 
 const token = createToken('usernameT', true);
+const userPayload = createUserPayload('userTest', true, true);
 
 describe('/api/user', () => {
     beforeEach(async () => {
@@ -23,7 +24,6 @@ describe('/api/user', () => {
     });
     describe('GET /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
-            const userPayload = createUserPayload('GETId1', true, true);
             const {user} = models;
             const createdUser = await user.create(userPayload,{returning: true});
             const res = await request(app)
@@ -46,7 +46,6 @@ describe('/api/user', () => {
     });
     describe('DELETE /:id', () => {
         it('Should return one users. Expected status is 200', async () => {
-            const userPayload = createUserPayload('DELETEId1', true, true);
             const {user} = models;
             const createdUser = await user.create(userPayload,{returning: true});
             const res = await request(app)
@@ -63,7 +62,6 @@ describe('/api/user', () => {
     });
     describe('POST /', () => {
        it('Should create and return user if all valid. Expected status is 200', async () => {
-           const userPayload = createUserPayload('POST', true, true);
            const res = await request(app)
                .post('/api/user')
                .set('Authorization',`Bearer ${token}`)
@@ -86,7 +84,6 @@ describe('/api/user', () => {
            expect(res.status).to.equal(400);
        });
        it('Should return conflict. Expected status is 409', async () => {
-           const userPayload = createUserPayload('testPOST409', true, true);
            const {user} = models;
            await user.create(userPayload);
            const res = await request(app)
@@ -100,7 +97,6 @@ describe('/api/user', () => {
    });
     describe('PUT /:id', () => {
        it('Should update the existing user. Expected status is 200', async () => {
-           const userPayload = createUserPayload('PUT', true, true);
            const {user} = models;
            const newUser = await user.create(userPayload, {returning: true});
            const res = await request(app)

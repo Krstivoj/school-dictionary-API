@@ -6,10 +6,11 @@ const app = require('../index');
 const {createToken, createClassPayload} = require('./utils/test.utils');
 
 const token = createToken('className', true);
+const {class: Class} = models;
+const classPayload = createClassPayload('Class test case', 'First class (1)', true);
 
 describe('/api/class', () => {
     beforeEach( async () => {
-        const Class = models.class;
         await Class.destroy({where:{}});
     });
     describe('GET /', () => {
@@ -23,7 +24,6 @@ describe('/api/class', () => {
     });
     describe('POST /', () => {
         it('Should create new class and return created object. Expected status is 200', async () => {
-            const classPayload = createClassPayload('FIRST CLASS post', 'First class (1)', true);
             const res = await request(app)
                 .post('/api/class')
                 .set('Authorization', `Bearer ${token}`)
@@ -34,8 +34,6 @@ describe('/api/class', () => {
             expect(res.body).to.have.property('description', classPayload.description);
         });
         it('Should return conflict. Expected status is 409', async () => {
-            const classPayload = createClassPayload('FIRST CLASS post 409 ', 'First class (1)', true);
-            const Class = models.class;
             await Class.create(classPayload);
             const res = await request(app)
                 .post('/api/class')
@@ -46,8 +44,6 @@ describe('/api/class', () => {
     });
     describe('PUT /:id', () => {
         it('Should update and return updated class. Expected status is 200', async () => {
-            const classPayload = createClassPayload('FIRST CLASS put', 'First class (1)', true);
-            const Class = models.class;
             const newClass = await Class.create(classPayload, {returning: true});
             const updated = {
                 key: 'putTest',
@@ -79,7 +75,6 @@ describe('/api/class', () => {
             const classPayloads = [
                 createClassPayload('FIRST CLASS 409','First class(1)', true),
                 createClassPayload('SECOND CLASS 409','Second class(2)', true)];
-            const Class = models.class;
             const class1 = await Class.create(classPayloads[0], {returning: true});
             await Class.create(classPayloads[1]);
             const res = await request(app)
@@ -91,8 +86,6 @@ describe('/api/class', () => {
     });
     describe('GET /:id', () => {
         it('Should return one class. Expected status is 200', async () => {
-            const classPayload = createClassPayload('get by id', '---', true);
-            const Class = models.class;
             const newClass = await Class.create(classPayload, {returning: true});
             const res = await request(app)
                 .get(`/api/class/${newClass.id}`)
@@ -113,8 +106,6 @@ describe('/api/class', () => {
     });
     describe('DELETE /:id', () => {
         it('Should delete resource. Expected resource is 200', async () => {
-            const classPayload = createClassPayload('delete by id', '---', true);
-            const Class = models.class;
             const newClass = await Class.create(classPayload, {returning: true});
             const res = await request(app)
                 .delete(`/api/class/${newClass.id}`)

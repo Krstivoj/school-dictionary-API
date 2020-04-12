@@ -13,9 +13,11 @@ const {
 const token = createToken('className', true);
 const {user, class: Class, class_elder} = models;
 
+const userPayload = createUserPayload('CE', true, true);
+const classPayload = createClassPayload('C--E','class elder test', true);
+
 describe('/api/class-elder', () => {
     beforeEach(async () => {
-        const {class_elder, user, class:Class} = models;
         await class_elder.destroy({where:{}});
         await user.destroy({where:{}});
         await Class.destroy({where:{}});
@@ -31,9 +33,6 @@ describe('/api/class-elder', () => {
     });
     describe('POST /', () => {
         it('Should create and return class elder object. Expected status is 200.', async () => {
-            const userPayload = createUserPayload('CE', true, true);
-            const classPayload = createClassPayload('C--E','class elder test', true);
-
             const elder = await user.create(userPayload, {returning: true});
             const eldersClass = await Class.create(classPayload, {returning: true});
 
@@ -64,10 +63,6 @@ describe('/api/class-elder', () => {
             expect(res2.status).to.equal(400);
         });
         it('Should return conflict. Expected status is 409.', async () => {
-
-            const userPayload = createUserPayload('CE', true, true);
-            const classPayload = createClassPayload('C--E','class elder test', true);
-
             const elder = await user.create(userPayload, {returning: true});
             const eldersClass = await Class.create(classPayload, {returning: true});
 
@@ -95,9 +90,6 @@ describe('/api/class-elder', () => {
     describe('GET /:id', () => {
         it('Should return class elder object. Expected status is 200.', async () => {
 
-            const userPayload = createUserPayload('CE', true, true);
-            const classPayload = createClassPayload('C--E','class elder test', true);
-
             const elder = await user.create(userPayload, {returning: true});
             const eldersClass = await Class.create(classPayload, {returning: true});
 
@@ -120,9 +112,6 @@ describe('/api/class-elder', () => {
     });
     describe('DELETE /:id', () => {
         it('Should remove resource. Expected status is 200.', async () => {
-            const userPayload = createUserPayload('CE', true, true);
-            const classPayload = createClassPayload('C--E','class elder test', true);
-
             const elder = await user.create(userPayload, {returning: true});
             const eldersClass = await Class.create(classPayload, {returning: true});
 

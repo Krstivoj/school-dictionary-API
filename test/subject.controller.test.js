@@ -4,10 +4,10 @@ const expect = require('chai').expect;
 const {models} = require('../config');
 const app = require('../index');
 
-
 const {createToken, createSubjectPayload} = require('./utils/test.utils');
 
 const token = createToken('usernameR', true);
+const subjectPayload = createSubjectPayload('subject test case', 'Some description', true);
 
 describe('/api/subject', () => {
     beforeEach(async () => {
@@ -25,7 +25,6 @@ describe('/api/subject', () => {
     });
     describe('POST /', () => {
         it('Should create and return subject. Expected status is 200.', async () => {
-            const subjectPayload = createSubjectPayload('POST', 'Some description', true);
             const res = await request(app)
                 .post('/api/subject')
                 .set('Authorization',`Bearer ${token}`)
@@ -45,7 +44,6 @@ describe('/api/subject', () => {
             expect(res.status).to.equal(400);
         });
         it('Should return conflict. Expected status 409.', async () => {
-            const subjectPayload = createSubjectPayload('POST409', 'Some description', true);
             const {subject} = models;
             await subject.create(subjectPayload);
             const res = await request(app)
@@ -57,7 +55,6 @@ describe('/api/subject', () => {
     });
     describe('PUT /:id', () => {
         it('Should update and return updated subject. Expected status is 200.', async () => {
-            const subjectPayload = createSubjectPayload('PUT', 'Some description', true);
             const {subject} = models;
             const newSubject = await subject.create(subjectPayload, {returning: true});
             const res = await request(app)
@@ -99,7 +96,6 @@ describe('/api/subject', () => {
     });
     describe('GET /:id', () => {
         it('Should return subject requested by id. Expected status is 200.', async () => {
-            const subjectPayload = createSubjectPayload('POST', 'Some description', true);
             const {subject} = models;
             const newSubject = await subject.create(subjectPayload, {returning: true});
             const res = await request(app)
@@ -120,7 +116,6 @@ describe('/api/subject', () => {
     });
     describe('DELETE /:id', () => {
         it('Should delete resource. Expected status is 200.', async () => {
-            const subjectPayload = createSubjectPayload('POST', 'Some description', true);
             const {subject} = models;
             const newSubject = await subject.create(subjectPayload, {returning: true});
             const res = await request(app)

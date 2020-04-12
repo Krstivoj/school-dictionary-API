@@ -6,6 +6,7 @@ const app = require('../index');
 const {createToken, createRolePayload} = require('./utils/test.utils');
 
 const token = createToken('usernameR', true);
+const rolePayload = createRolePayload('role test case', 'Creating role', true);
 
 describe('api/role', () => {
     beforeEach(async () => {
@@ -23,7 +24,6 @@ describe('api/role', () => {
     });
     describe('POST /', () => {
         it('Should create and return role object. Expected status is 200', async () => {
-            const rolePayload = createRolePayload('rolePOST', 'Creating role', true);
             const res = await request(app)
                 .post('/api/role')
                 .set('Authorization', `Bearer ${token}`)
@@ -34,7 +34,6 @@ describe('api/role', () => {
             expect(res.body).to.have.property('description', rolePayload.description);
         });
         it('Should return conflict. Expected status 409', async () => {
-            const rolePayload = createRolePayload('rolePOST409', 'description', true);
             const {role} = models;
             await role.create(rolePayload);
             const res = await request(app)
@@ -46,7 +45,6 @@ describe('api/role', () => {
     });
     describe('PUT /:id', () => {
        it('Should update existing role. Expected status is 200', async () => {
-           const rolePayload = createRolePayload('roleForUpdate', 'update role', true);
            const {role} = models;
            const newRole = await role.create(rolePayload, {returning: true});
            const res = await request(app)
@@ -86,7 +84,6 @@ describe('api/role', () => {
     });
     describe('GET /:id', () => {
         it('Should return one object. Expected status is 200', async () => {
-            const rolePayload = createRolePayload('roleGETbyID', 'description', true);
             const {role} = models;
             const newRole = await role.create(rolePayload, {returning: true});
             const res = await request(app)
@@ -107,7 +104,6 @@ describe('api/role', () => {
     });
     describe('DELETE /:id', () => {
         it('Should return status 200.', async () => {
-            const rolePayload = createRolePayload('roleDelete', 'description', true);
             const {role} = models;
             const newRole = await role.create(rolePayload, {returning: true});
             const res = await request(app)
