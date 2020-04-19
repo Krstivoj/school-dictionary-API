@@ -44,20 +44,20 @@ describe('api/role', () => {
         });
     });
     describe('PUT /:id', () => {
-       it('Should update existing role. Expected status is 200', async () => {
-           const {role} = models;
-           const newRole = await role.create(rolePayload, {returning: true});
-           const res = await request(app)
-               .put(`/api/role/${newRole.id}`)
-               .set('Authorization', `Bearer ${token}`)
-               .send({
-                   description: 'test updating'
-               });
-           expect(res.status).to.equal(200);
-           expect(res.body).to.have.property('id', newRole.id);
-           expect(res.body).to.have.property('description', 'test updating');
-       });
-       it('Should return not found resource. Expected status is 404', async () => {
+        it('Should update existing role. Expected status is 200', async () => {
+            const {role} = models;
+            const newRole = await role.create(rolePayload, {returning: true});
+            const res = await request(app)
+                .put(`/api/role/${newRole.id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    description: 'test updating'
+                });
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.property('id', newRole.id);
+            expect(res.body).to.have.property('description', 'test updating');
+        });
+        it('Should return not found resource. Expected status is 404', async () => {
             const res = await request(app)
                 .put(`/api/role/0`)
                 .set('Authorization', `Bearer ${token}`)
@@ -66,20 +66,24 @@ describe('api/role', () => {
                 });
             expect(res.status).to.equal(404);
         });
-       it('Should return conflict. Expected status 409', async () => {
+        it('Should return conflict. Expected status 409', async () => {
             const rolePayloads = [
                 createRolePayload('role409-1', 'description', true),
                 createRolePayload('role409-2', 'description', true)];
             const {role} = models;
-            const role1 = await role.create(rolePayloads[0], {returning: true});
-            await role.create(rolePayloads[1], {returning: true});
-            const res = await request(app)
-                .put(`/api/role/${role1.id}`)
-                .set('Authorization', `Bearer ${token}`)
-                .send({
-                    name: rolePayloads[1].name
+            Promise.all([
+                role.create(rolePayloads[0], {returning: true}),
+                role.create(rolePayloads[1], {returning: true})
+            ])
+                .then(async results => {
+                    const res = await request(app)
+                        .put(`/api/role/${results[0].id}`)
+                        .set('Authorization', `Bearer ${token}`)
+                        .send({
+                            name: rolePayloads[1].name
+                        });
+                    expect(res.status).to.equal(409);
                 });
-            expect(res.status).to.equal(409);
         });
     });
     describe('GET /:id', () => {

@@ -14,13 +14,13 @@ describe('/api/class', () => {
         await Class.destroy({where:{}});
     });
     describe('GET /', () => {
-       it('Should return all classes. Expected status is 200', async () => {
-           const res = await request(app)
-               .get('/api/class')
-               .set('Authorization', `Bearer ${token}`);
-           expect(res.status).to.equal(200);
-           expect(res.body).to.be.an('array');
-       });
+        it('Should return all classes. Expected status is 200', async () => {
+            const res = await request(app)
+                .get('/api/class')
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.status).to.equal(200);
+            expect(res.body).to.be.an('array');
+        });
     });
     describe('POST /', () => {
         it('Should create new class and return created object. Expected status is 200', async () => {
@@ -75,13 +75,17 @@ describe('/api/class', () => {
             const classPayloads = [
                 createClassPayload('FIRST CLASS 409','First class(1)', true),
                 createClassPayload('SECOND CLASS 409','Second class(2)', true)];
-            const class1 = await Class.create(classPayloads[0], {returning: true});
-            await Class.create(classPayloads[1]);
-            const res = await request(app)
-                .put(`/api/class/${class1.id}`)
-                .set('Authorization', `Bearer ${token}`)
-                .send({ key: classPayloads[1].key});
-            expect(res.status).to.equal(409);
+            Promise.all([
+                Class.create(classPayloads[0], {returning: true}),
+                Class.create(classPayloads[1])
+            ])
+                .then(async results => {
+                    const res = await request(app)
+                        .put(`/api/class/${results[0].id}`)
+                        .set('Authorization', `Bearer ${token}`)
+                        .send({ key: classPayloads[1].key});
+                    expect(res.status).to.equal(409);
+                });
         });
     });
     describe('GET /:id', () => {

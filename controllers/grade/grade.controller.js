@@ -11,7 +11,8 @@ exports.create = async (req, res, next) => {
 };
 
 exports.findAll = async (req, res, next) => {
-    await res.json();
+    const grades = await GradeService.findAll();
+    await res.json(grades);
 };
 
 exports.update = async (req, res, next) => {

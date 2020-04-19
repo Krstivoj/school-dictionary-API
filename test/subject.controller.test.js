@@ -83,15 +83,19 @@ describe('/api/subject', () => {
                 createSubjectPayload('PUT4091', 'Some description', true),
                 createSubjectPayload('PUT4092', 'Some description', true)];
             const {subject} = models;
-            const newSubject = await subject.create(subjectPayloads[0], {returning: true});
-            await subject.create(subjectPayloads[1]);
-            const res = await request(app)
-                .put(`/api/subject/${newSubject.id}`)
-                .set('Authorization',`Bearer ${token}`)
-                .send({
-                    key: subjectPayloads[1].key
+            Promise.all([
+                subject.create(subjectPayloads[0], {returning: true}),
+                subject.create(subjectPayloads[1])
+            ])
+                .then(async results => {
+                    const res = await request(app)
+                        .put(`/api/subject/${results[0].id}`)
+                        .set('Authorization',`Bearer ${token}`)
+                        .send({
+                            key: subjectPayloads[1].key
+                        });
+                    expect(res.status).to.equal(409);
                 });
-            expect(res.status).to.equal(409);
         });
     });
     describe('GET /:id', () => {
@@ -107,7 +111,7 @@ describe('/api/subject', () => {
             expect(res.body).to.have.property('key');
             expect(res.body).to.have.property('description');
         });
-        it('Should return resource not found. Expected result is 404.', async () => {
+        it('Should return resource not found. Expected results is 404.', async () => {
             const res = await request(app)
                 .get(`/api/subject/0`)
                 .set('Authorization',`Bearer ${token}`);

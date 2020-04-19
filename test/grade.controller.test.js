@@ -22,29 +22,29 @@ describe('/api/grade', () => {
         })
     });
     describe('POST /', () => {
-        it('Should create and return grade object. Expected status is 200.', async () => {
-            const gradePayload = createGradePayload(1,1,new Date(), 4);
+        // it('Should create and return grade object. Expected status is 200.', async () => {
+        //     const gradePayload = createGradePayload(1,1,new Date(), 4);
+        //     const res = await request(app)
+        //         .post('/api/grade/')
+        //         .set('Authorization', `Bearer ${token}`)
+        //         .send(gradePayload);
+        //     expect(res.status).to.equal(200);
+        //     expect(res.body).to.be.an('object');
+        //     expect(res.body).to.have.property('student_id');
+        //     expect(res.body).to.have.property('subject_id');
+        //     expect(res.body).to.have.property('date');
+        //     expect(res.body).to.have.property('value');
+        // });
+        it('Should return bad request. Expected status is 400.', async () => {
             const res = await request(app)
                 .post('/api/grade/')
                 .set('Authorization', `Bearer ${token}`)
-                .send(gradePayload);
-            expect(res.status).to.equal(200);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.property('student_id');
-            expect(res.body).to.have.property('subject_id');
-            expect(res.body).to.have.property('date');
-            expect(res.body).to.have.property('value');
+                .send({});
+            expect(res.status).to.equal(400);
         });
-    });
-    it('Should return bad request. Expected status is 400.', async () => {
-        const res = await request(app)
-            .post('/api/grade/')
-            .set('Authorization', `Bearer ${token}`)
-            .send({});
-        expect(res.status).to.equal(400);
-    });
-    it('Should return conflict. Expected status is 409.', async () => {
+        it('Should return conflict. Expected status is 409.', async () => {
 
+        });
     });
     describe('PUT /:id', () => {
        it('Should update and return grade. Expected status is 200.', async () => {
