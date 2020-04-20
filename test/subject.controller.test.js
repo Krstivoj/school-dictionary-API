@@ -99,7 +99,7 @@ describe('/api/subject', () => {
         });
     });
     describe('GET /:id', () => {
-        it('Should return subject requested by id. Expected status is 200.', async () => {
+        it('Should return one subject. Expected status is 200.', async () => {
             const {subject} = models;
             const newSubject = await subject.create(subjectPayload, {returning: true});
             const res = await request(app)

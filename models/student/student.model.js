@@ -7,14 +7,12 @@ module.exports = (sequelize) => {
       student.belongsTo(models.user,
           {
               foreignKey: 'user_id',
-              targetKey: 'id',
-              as: 'students'
+              targetKey: 'id'
           });
       student.belongsTo(models.class,
           {
               foreignKey: 'class_id',
-              targetKey: 'id',
-              as: 'student_class'
+              targetKey: 'id'
           });
       student.hasMany(models.grade,
           {

@@ -129,7 +129,7 @@ describe('/api/class-elder', () => {
         });
     });
     describe('GET /:id', () => {
-        it('Should return class elder object. Expected status is 200.', async () => {
+        it('Should return one class elder object. Expected status is 200.', async () => {
             Promise.all([
                 user.create(userPayload, {returning: true}),
                 Class.create(classPayload, {returning: true})

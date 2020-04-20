@@ -64,6 +64,23 @@ const createGradePayload = (student_id, subject_id, date, value, valid) => {
    }
 };
 
+const createDebitPayload = (user_id, subject_id, class_id) => {
+    return {
+        user_id,
+        subject_id,
+        class_id,
+        school_year: new Date()
+    }
+};
+
+const createStudentPayload = (user_id, class_id) => {
+    return {
+        user_id,
+        class_id,
+        school_year: new Date()
+    }
+};
+
 module.exports = {
     createToken,
     createUserPayload,
@@ -71,5 +88,7 @@ module.exports = {
     createClassPayload,
     createSubjectPayload,
     createClassElderPayload,
-    createGradePayload
+    createGradePayload,
+    createDebitPayload,
+    createStudentPayload
 };

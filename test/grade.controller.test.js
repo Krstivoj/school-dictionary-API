@@ -61,7 +61,7 @@ describe('/api/grade', () => {
        });
     });
     describe('GET /:id', () => {
-       it('Should return resource with specified id. Expected status is 200.', async () => {
+       it('Should return one grade object. Expected status is 200.', async () => {
 
        });
        it('Should return resource not found. Expected status is 404.', async () => {

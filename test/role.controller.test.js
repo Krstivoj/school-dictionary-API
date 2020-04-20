@@ -87,7 +87,7 @@ describe('api/role', () => {
         });
     });
     describe('GET /:id', () => {
-        it('Should return one object. Expected status is 200', async () => {
+        it('Should return one role object. Expected status is 200', async () => {
             const {role} = models;
             const newRole = await role.create(rolePayload, {returning: true});
             const res = await request(app)

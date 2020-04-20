@@ -8,15 +8,36 @@ const DEBIT_SCHEMA = {
     },
     class_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'class',
+            key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
     },
     user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'user',
+            key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
     },
     subject_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'subject',
+            key: 'id'
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    },
+    school_year: {
+        type: Sequelize.DATE
     },
     deleted: {
         type: Sequelize.BOOLEAN,

@@ -7,20 +7,17 @@ module.exports = (sequelize) => {
       debit.belongsTo(models.subject,
           {
               foreignKey: 'subject_id',
-              targetKey: 'id',
-              as: 'subjects'
+              targetKey: 'id'
           });
       debit.belongsTo(models.user,
           {
               foreignKey: 'user_id',
-              targetKey: 'id',
-              as: 'subject_teachers'
+              targetKey: 'id'
           });
       debit.belongsTo(models.class,
           {
               foreignKey: 'class_id',
-              targetKey: 'id',
-              as: 'subject_in_class'
+              targetKey: 'id'
           });
     };
     return debit;

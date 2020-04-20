@@ -23,7 +23,7 @@ describe('/api/user', () => {
         });
     });
     describe('GET /:id', () => {
-        it('Should return one users. Expected status is 200', async () => {
+        it('Should return one user. Expected status is 200', async () => {
             const {user} = models;
             const createdUser = await user.create(userPayload,{returning: true});
             const res = await request(app)
